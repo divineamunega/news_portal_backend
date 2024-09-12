@@ -1,0 +1,63 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "mongodb"
+  url       = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(uuid())  @map("_id")
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(USER)
+  news      News[]   @relation("NewsAuthor")
+  comments  Comment[] 
+  likes     Like[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  id          String   @id @default(uuid())  @map("_id")
+  title       String
+  description String
+  content     String
+  author      User     @relation("NewsAuthor", fields: [authorId], references: [id])
+  authorId    String
+  comments    Comment[]
+  likes       Like[]
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())  @map("_id")
+  content   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  news      News     @relation(fields: [newsId], references: [id])
+  newsId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(uuid())  @map("_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  news      News     @relation(fields: [newsId], references: [id])
+  newsId    String
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  PUBLISHER
+  USER
+}

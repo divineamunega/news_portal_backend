@@ -30,7 +30,6 @@ const signup = AsyncErrorHandler(async (req, res, next) => {
 const signupPublisher = AsyncErrorHandler(async (req, res, next) => {
 	// Extract name, email, and password from the validated request data
 	const { name, email, password } = req.data;
-	console.log(name);
 
 	// Hash the password with a salt of 12 rounds
 	const hashedPassword = await bycrypt.hash(password, 12);
@@ -65,7 +64,6 @@ const login = AsyncErrorHandler(async (req, res, next) => {
 	// Check if the provided password matches the stored hashed password
 	const isCorrect = await bycrypt.compare(password, user!.password);
 
-	console.log(isCorrect);
 	// If password is incorrect, throw an authentication error
 	if (!isCorrect) {
 		deleteCookie(res);
@@ -83,7 +81,6 @@ const protect = function ({ role = "USER" }) {
 
 		// Get cookie from cookie
 		const token = req.cookies.jwt;
-		console.log("TOKEN", token);
 		if (!token)
 			throw new AppError(
 				"Please input a token to access this route.",
@@ -118,7 +115,11 @@ const protect = function ({ role = "USER" }) {
 				"forbidden"
 			);
 
-		if (role === "PUBLISHER" && user.role === "USER")
+		if (
+			role === "PUBLISHER" &&
+			user.role !== "PUBLISHER" &&
+			user.role !== "ADMIN"
+		)
 			throw new AppError(
 				"You're not allowed to access this resource",
 				401,
@@ -146,7 +147,6 @@ const createSendToken = (
 ) => {
 	// Create Signed JWT token
 	const token = signToken(user.id);
-	console.log(token);
 
 	// Create an http only cookie to be sent after successfull signin
 	const cookieOptions = {

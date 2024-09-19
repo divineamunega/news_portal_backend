@@ -34,6 +34,8 @@ model News {
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  isPublished Boolean 
+  newsImage   String?
 }
 
 model Comment {

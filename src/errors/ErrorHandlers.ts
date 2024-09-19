@@ -52,6 +52,8 @@ const handleErrorProd = (err: any) => {
 
 	if (!err.isOperational) {
 		// Return generic error message for non-operational errors
+		console.log(err);
+
 		return {
 			status: "error",
 			message: "An unexpected error occurred. Please try again later.",
@@ -60,6 +62,7 @@ const handleErrorProd = (err: any) => {
 	}
 
 	// Return the error response for all other operational errors
+
 	return {
 		status: err.status,
 		statusCode: err.statusCode,
@@ -74,6 +77,8 @@ const handleErrorProd = (err: any) => {
  * @returns Detailed error information
  */
 const handleErrorDev = (err: any) => {
+	console.log(err);
+
 	return {
 		message: err.message,
 		err,

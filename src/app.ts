@@ -6,6 +6,8 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { handleErrorDev, handleErrorProd } from "./errors/ErrorHandlers";
+import UserRoutes from "./routes/UserRoutes";
+import NewsRoutes from "./routes/NewsRoutes";
 
 const app = express();
 
@@ -32,6 +34,8 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 app.use("/api/v1/auth", AuthRoute);
+app.use("/api/v1/users", UserRoutes);
+app.use("/api/v1/news", NewsRoutes);
 
 app.get("/api/cron", (req: Request, res: Response) => {
 	console.log("CRON REQUEST");

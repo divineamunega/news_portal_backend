@@ -1,7 +1,7 @@
 import multer from "multer";
 import { Router } from "express";
 import { publishNewsValidator } from "../validators/NewsValidator";
-import { publishNews } from "../controllers/NewsController";
+import { getNews, publishNews } from "../controllers/NewsController";
 import { protect } from "../controllers/AuthController";
 
 const upload = multer({
@@ -18,5 +18,5 @@ router.post(
 	publishNewsValidator(),
 	publishNews
 );
-
+router.get("/", protect({ role: "PUBLISHER" }), getNews);
 export default router;

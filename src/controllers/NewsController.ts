@@ -7,10 +7,17 @@ const getNews = AsyncErrorHandler(async (req, res, next) => {
 		where: { authorId: req.user?.id },
 	});
 
-	console.log(news);
 	res.status(200).json({
 		status: "success",
-		data: news,
+		data: news.map((news) => {
+			return {
+				id: news.id,
+				title: news.title,
+				description: news.description,
+				newsImage: news.newsImage,
+				isPublished: news.isPublished,
+			};
+		}),
 	});
 });
 
@@ -26,7 +33,7 @@ const publishNews = AsyncErrorHandler(async (req, res, next) => {
 		console.log("Uploaded image deleted from local");
 	});
 
-	const { title, description, content } = req.data;
+	const { title, description, content, section, subSection } = req.data;
 
 	const news = await prisma.news.create({
 		data: {
@@ -37,6 +44,8 @@ const publishNews = AsyncErrorHandler(async (req, res, next) => {
 			authorId: req.user?.id || "",
 			publishedAt: new Date().toISOString(),
 			newsImage: url,
+			section,
+			subSection,
 		},
 	});
 
@@ -48,6 +57,7 @@ const publishNews = AsyncErrorHandler(async (req, res, next) => {
 			description: news.description,
 			content: news.content,
 			newsImage: news.newsImage,
+			isPublished: news.isPublished,
 		},
 	});
 });

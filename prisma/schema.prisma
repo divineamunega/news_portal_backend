@@ -36,6 +36,8 @@ model News {
   updatedAt   DateTime  @updatedAt
   isPublished Boolean 
   newsImage   String?
+  section     String
+  subSection  String
 }
 
 model Comment {

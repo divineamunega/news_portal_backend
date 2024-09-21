@@ -1,20 +1,20 @@
-import multer from "multer";
 import { Router } from "express";
 import { publishNewsValidator } from "../validators/NewsValidator";
 import { getNews, publishNews } from "../controllers/NewsController";
 import { protect } from "../controllers/AuthController";
+import multer from "multer";
+
+const router = Router();
 
 const upload = multer({
 	dest: "uploads/",
-	limits: { fileSize: 1 * 1024 * 1024 },
+	limits: { fileSize: 5 * 1024 * 1024 },
 });
-
-const router = Router();
 
 router.post(
 	"/",
 	protect({ role: "PUBLISHER" }),
-	upload.single("image"),
+	upload.single("newsImage"),
 	publishNewsValidator(),
 	publishNews
 );

@@ -11,6 +11,8 @@ const publishNewsValidator = () => [
 
 	body("description").notEmpty().withMessage("A news must have description"),
 	body("content").notEmpty().withMessage("A news must have content"),
+	body("section").notEmpty().withMessage("A news must have a section"),
+	body("subSection").notEmpty().withMessage("A news must have a Sub Section"),
 	handlePublishNewsData,
 ];
 
@@ -29,7 +31,7 @@ const handlePublishNewsData = function (
 	}
 
 	if (!req.file) {
-		return res.status(400).json({ message: "Image is required" });
+		throw new AppError("An image is required", 400);
 	}
 	// Attach validated data to the request object
 

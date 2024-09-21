@@ -34,6 +34,7 @@ const publishNews = AsyncErrorHandler(async (req, res, next) => {
 	});
 
 	const { title, description, content, section, subSection } = req.data;
+	console.log(req.data);
 
 	const news = await prisma.news.create({
 		data: {

@@ -15,7 +15,10 @@ const app = express();
 app.use(cookieParser());
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin:
+			process.env.ENVIROMENT === "DEVELOPMENT"
+				? "http://localhost:5173"
+				: "https://acu-news-portal.vercel.app/auth/login",
 		credentials: true,
 		optionsSuccessStatus: 200,
 		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
@@ -24,7 +27,10 @@ app.use(
 app.options(
 	"*",
 	cors({
-		origin: "http://localhost:5173",
+		origin:
+			process.env.ENVIROMENT === "DEVELOPMENT"
+				? "http://localhost:5173"
+				: "https://acu-news-portal.vercel.app/auth/login",
 		credentials: true,
 		optionsSuccessStatus: 200,
 		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],

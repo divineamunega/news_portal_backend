@@ -18,7 +18,7 @@ app.use(
 		origin:
 			process.env.ENVIROMENT === "DEVELOPMENT"
 				? "http://localhost:5173"
-				: "https://acu-news-portal.vercel.app/auth/login",
+				: "https://acu-news-portal.vercel.app",
 		credentials: true,
 		optionsSuccessStatus: 200,
 		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
@@ -30,7 +30,7 @@ app.options(
 		origin:
 			process.env.ENVIROMENT === "DEVELOPMENT"
 				? "http://localhost:5173"
-				: "https://acu-news-portal.vercel.app/auth/login",
+				: "https://acu-news-portal.vercel.app",
 		credentials: true,
 		optionsSuccessStatus: 200,
 		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],

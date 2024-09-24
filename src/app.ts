@@ -21,15 +21,7 @@ app.use(
 		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
 	})
 );
-app.options(
-	"*",
-	cors({
-		origin: ["http://localhost:5173", "https://acu-news-portal.vercel.app"],
-		credentials: true,
-		optionsSuccessStatus: 200,
-		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
-	})
-);
+app.options("*", cors());
 
 app.use(express.json({ limit: "10mb" }));
 app.use(morgan("tiny"));

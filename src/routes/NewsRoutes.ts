@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { publishNewsValidator } from "../validators/NewsValidator";
-import { getNews, publishNews } from "../controllers/NewsController";
+import {
+	getNews,
+	getNewsById,
+	publishNews,
+} from "../controllers/NewsController";
 import { protect } from "../controllers/AuthController";
 import multer from "multer";
 
@@ -18,5 +22,7 @@ router.post(
 	publishNewsValidator(),
 	publishNews
 );
+
+router.get("/:id", getNewsById);
 router.get("/", protect({ role: "PUBLISHER" }), getNews);
 export default router;

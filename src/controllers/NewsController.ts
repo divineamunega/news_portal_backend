@@ -1,4 +1,5 @@
 import cloudinary from "../cloudinary";
+import AppError from "../errors/AppError";
 import AsyncErrorHandler from "../errors/AsyncErrorHandler";
 import prisma from "../prisma";
 import fs from "fs";
@@ -63,4 +64,16 @@ const publishNews = AsyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-export { getNews, saveNewsToDraft, publishNews };
+const getNewsById = AsyncErrorHandler(async (req, res, next) => {
+	const { id } = req.params;
+	if (!id) throw new AppError("Please use an id", 400);
+	const news = await prisma.news.findUnique({ where: { id: id } });
+
+	if (!news) throw new AppError("Could not find a news for this id", 404);
+
+	res.json({
+		status: "success",
+		data: news,
+	});
+});
+export { getNews, saveNewsToDraft, publishNews, getNewsById };

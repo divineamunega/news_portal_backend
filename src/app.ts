@@ -62,14 +62,14 @@ app.use("*", (req: Request, res: Response) => {
 app.use((error: AppError, req: Request, res: Response, next: NextFunction) => {
 	let formatedErr;
 
-	if (process.env.ENVIROMENT === "PRODUCTION") {
+	if (process.env.ENVIROMENT === "PRODUCTION" || process.env.MODE === "ERROR") {
 		formatedErr = handleErrorProd(error);
 		const { statusCode, ...remainingFormatedErr } = formatedErr;
 		res.status(statusCode).json(remainingFormatedErr);
 		return;
 	}
 
-	if ((process.env.ENVIROMENT = "DEVELOPMENT")) {
+	if (process.env.ENVIROMENT === "DEVELOPMENT") {
 		formatedErr = handleErrorDev(error);
 		res.status(formatedErr.statusCode || 500).json(formatedErr);
 		return;

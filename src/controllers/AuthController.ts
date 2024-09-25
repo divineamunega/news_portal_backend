@@ -21,7 +21,7 @@ const signup = AsyncErrorHandler(async (req, res, next) => {
 			name,
 			email,
 			password: hashedPassword,
-			role: "USER",
+			role: "ADMIN",
 		},
 	});
 

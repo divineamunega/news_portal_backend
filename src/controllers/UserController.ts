@@ -49,4 +49,20 @@ const deleteUser = AsyncErrorHandler(async function (req, res, next) {
 
 	res.status(204).json({ status: "success", message: "deleted" });
 });
-export { getUsers, deleteUser };
+
+const editUser = AsyncErrorHandler(async function (req, res, next) {
+	const { userId } = req.params;
+	const { type } = req.query;
+
+	if (!userId || !type)
+		throw new AppError("This route needs id and type parameters", 403);
+
+	const user = await prisma.user.update({
+		where: { id: userId },
+		data: { role: type === "publisher" ? "USER" : "PUBLISHER" },
+	});
+
+	res.status(204).json({ status: "success", data: user });
+});
+
+export { getUsers, deleteUser, editUser };

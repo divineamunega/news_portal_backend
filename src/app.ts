@@ -18,7 +18,7 @@ app.use(
 		origin: ["http://localhost:5173", "https://acu-news-portal.vercel.app"],
 		credentials: true,
 		optionsSuccessStatus: 200,
-		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE"],
+		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE", "PATCH"],
 	})
 );
 app.options("*", cors());

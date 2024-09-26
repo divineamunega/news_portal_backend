@@ -6,6 +6,6 @@ const router = Router();
 
 router.get("/", protect({ role: "ADMIN" }), getUsers);
 router.delete("/:userId", protect({ role: "ADMIN" }), deleteUser);
-router.patch(":/userId", protect({ role: "ADMIN" }), editUser);
+router.patch("/:userId", protect({ role: "ADMIN" }), editUser);
 
 export default router;

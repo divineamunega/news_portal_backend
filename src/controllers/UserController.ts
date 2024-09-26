@@ -63,6 +63,7 @@ const editUser = AsyncErrorHandler(async function (req, res, next) {
 	});
 
 	res.status(204).json({ status: "success", data: user });
+	return;
 });
 
 export { getUsers, deleteUser, editUser };

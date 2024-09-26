@@ -43,4 +43,10 @@ const getUsers = AsyncErrorHandler(async (req, res, next) => {
 	});
 });
 
-export { getUsers };
+const deleteUser = AsyncErrorHandler(async function (req, res, next) {
+	const { userId } = req.params;
+	await prisma.user.delete({ where: { id: userId } });
+
+	res.status(204).json({ status: "success", message: "deleted" });
+});
+export { getUsers, deleteUser };

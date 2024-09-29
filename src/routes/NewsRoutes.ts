@@ -3,7 +3,9 @@ import { publishNewsValidator } from "../validators/NewsValidator";
 import {
 	getNews,
 	getNewsById,
+	likeNews,
 	publishNews,
+	unlike,
 } from "../controllers/NewsController";
 import { protect } from "../controllers/AuthController";
 import multer from "multer";
@@ -25,4 +27,6 @@ router.post(
 
 router.get("/:id", getNewsById);
 router.get("/", protect({ role: "PUBLISHER" }), getNews);
+router.post("/like/:id", protect({ role: "USER" }), likeNews);
+router.post("/unlike/:id", protect({ role: "USER" }), unlike);
 export default router;

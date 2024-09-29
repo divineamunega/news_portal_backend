@@ -15,9 +15,11 @@ const app = express();
 app.use(cookieParser());
 app.use(
 	cors({
+		// Origins allowed
 		origin: ["http://localhost:5173", "https://acu-news-portal.vercel.app"],
 		credentials: true,
 		optionsSuccessStatus: 200,
+		// Methods Allowed
 		methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD", "DELETE", "PATCH"],
 	})
 );

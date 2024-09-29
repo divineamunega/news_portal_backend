@@ -66,14 +66,57 @@ const publishNews = AsyncErrorHandler(async (req, res, next) => {
 
 const getNewsById = AsyncErrorHandler(async (req, res, next) => {
 	const { id } = req.params;
+
+	const { userId } = req.query;
+	let isLiked = false;
+
 	if (!id) throw new AppError("Please use an id", 400);
 	const news = await prisma.news.findUnique({ where: { id: id } });
 
 	if (!news) throw new AppError("Could not find a news for this id", 404);
 
-	res.json({
+	const likes = await prisma.like.findMany({ where: { newsId: news?.id } });
+
+	if (userId) {
+		const like = await prisma.like.findFirst({
+			where: { newsId: id, userId: userId + "" },
+		});
+
+		if (like) isLiked = true;
+	}
+
+	res.status(200).json({
 		status: "success",
-		data: news,
+		data: { ...news, likes: likes.length, isLiked },
 	});
 });
-export { getNews, saveNewsToDraft, publishNews, getNewsById };
+
+const likeNews = AsyncErrorHandler(async (req, res, next) => {
+	const { id } = req.params;
+
+	if (!req.user) throw new AppError("This route is protected", 400);
+
+	const like = await prisma.like.create({
+		data: { userId: req?.user.id, newsId: id },
+	});
+
+	if (!like) throw new AppError("An error occured in creating like", 400);
+
+	res.json({ status: "success", message: "Liked succesfully", like });
+	return;
+});
+
+const unlike = AsyncErrorHandler(async function (req, res) {
+	const { id } = req.params;
+	console.log(id);
+
+	if (!id) throw new AppError("Please use an id", 400);
+
+	if (!req.user) throw new AppError("This route is protected", 400);
+
+	await prisma.like.delete({ where: { id } });
+
+	res.json({ status: "success", message: "Unliked successfully" });
+});
+
+export { getNews, saveNewsToDraft, publishNews, getNewsById, likeNews, unlike };

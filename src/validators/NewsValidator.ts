@@ -39,4 +39,27 @@ const handlePublishNewsData = function (
 	next();
 };
 
-export { publishNewsValidator };
+const handleCommentData = function (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		// Pass validation errors to the next middleware (error handler)
+
+		return next(
+			new AppError("Validation Error", 400, errors.array(), "express_validator")
+		);
+	}
+
+	req.data = matchedData(req);
+	next();
+};
+
+const newsValidator = [
+	body("content").notEmpty().withMessage("You can not submit an empty comment"),
+	handleCommentData,
+];
+
+export { publishNewsValidator, newsValidator };

@@ -42,6 +42,7 @@ model News {
 
 model Comment {
   id        String   @id @default(uuid())  @map("_id")
+  name      String
   content   String
   user      User     @relation(fields: [userId], references: [id])
   userId    String

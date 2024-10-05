@@ -77,17 +77,28 @@ const getNewsById = AsyncErrorHandler(async (req, res, next) => {
 
 	const likes = await prisma.like.findMany({ where: { newsId: news?.id } });
 
+	let like;
 	if (userId) {
-		const like = await prisma.like.findFirst({
+		like = await prisma.like.findFirst({
 			where: { newsId: id, userId: userId + "" },
 		});
 
 		if (like) isLiked = true;
 	}
 
+	const comments = await prisma.comment.findMany({
+		where: { newsId: id },
+	});
+
 	res.status(200).json({
 		status: "success",
-		data: { ...news, likes: likes.length, isLiked },
+		data: {
+			...news,
+			likes: likes.length,
+			isLiked,
+			likeId: isLiked ? like?.id : "",
+			comments,
+		},
 	});
 });
 
@@ -119,4 +130,27 @@ const unlike = AsyncErrorHandler(async function (req, res) {
 	res.json({ status: "success", message: "Unliked successfully" });
 });
 
-export { getNews, saveNewsToDraft, publishNews, getNewsById, likeNews, unlike };
+const addComment = AsyncErrorHandler(async function (req, res) {
+	const { id: newsId } = req.params;
+	const { content } = req.data;
+
+	if (!req.user) throw new AppError("This is a protected route", 403);
+
+	const comment = await prisma.comment.create({
+		data: { content, newsId: newsId, name: req.user.name, userId: req.user.id },
+	});
+
+	console.log(comment);
+
+	res.status(201).json({ status: "success", data: comment });
+});
+
+export {
+	getNews,
+	saveNewsToDraft,
+	publishNews,
+	getNewsById,
+	likeNews,
+	unlike,
+	addComment,
+};

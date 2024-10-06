@@ -57,9 +57,9 @@ const handleCommentData = function (
 	next();
 };
 
-const newsValidator = [
-	body("content").notEmpty().withMessage("You can not submit an empty comment"),
+const commentValidator = () => [
+	body("content").exists().withMessage("You can not submit an empty comment"),
 	handleCommentData,
 ];
 
-export { publishNewsValidator, newsValidator };
+export { publishNewsValidator, commentValidator };

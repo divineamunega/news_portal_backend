@@ -1,6 +1,10 @@
 import { Router } from "express";
-import { publishNewsValidator } from "../validators/NewsValidator";
 import {
+	commentValidator,
+	publishNewsValidator,
+} from "../validators/NewsValidator";
+import {
+	addComment,
 	getNews,
 	getNewsById,
 	likeNews,
@@ -29,4 +33,10 @@ router.get("/:id", getNewsById);
 router.get("/", protect({ role: "PUBLISHER" }), getNews);
 router.post("/like/:id", protect({ role: "USER" }), likeNews);
 router.post("/unlike/:id", protect({ role: "USER" }), unlike);
+router.post(
+	"/comment/:id",
+	protect({ role: "USER" }),
+	commentValidator(),
+	addComment
+);
 export default router;

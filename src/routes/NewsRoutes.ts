@@ -5,6 +5,7 @@ import {
 } from "../validators/NewsValidator";
 import {
 	addComment,
+	getHomeNews,
 	getNews,
 	getNewsById,
 	likeNews,
@@ -29,6 +30,7 @@ router.post(
 	publishNews
 );
 
+router.get("/main", getHomeNews);
 router.get("/:id", getNewsById);
 router.get("/", protect({ role: "PUBLISHER" }), getNews);
 router.post("/like/:id", protect({ role: "USER" }), likeNews);

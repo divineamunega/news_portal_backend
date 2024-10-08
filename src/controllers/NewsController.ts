@@ -145,6 +145,16 @@ const addComment = AsyncErrorHandler(async function (req, res) {
 	res.status(201).json({ status: "success", data: comment });
 });
 
+const getHomeNews = AsyncErrorHandler(async (req, res, next) => {
+	const news = await prisma.news.aggregateRaw({
+		pipeline: [
+			{ $sample: { size: 5 } },
+			{ $project: { title: 1, newsImage: 1, section: 1 } }, // Fetch 5 random documents
+		],
+	});
+
+	res.status(200).json({ status: "success", data: news });
+});
 export {
 	getNews,
 	saveNewsToDraft,
@@ -153,4 +163,5 @@ export {
 	likeNews,
 	unlike,
 	addComment,
+	getHomeNews,
 };

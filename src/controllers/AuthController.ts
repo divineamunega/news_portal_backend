@@ -81,6 +81,7 @@ const protect = function ({ role = "USER" }) {
 
 		// Get cookie from cookie
 		const token = req.cookies.jwt;
+
 		if (!token)
 			throw new AppError(
 				"Please input a token to access this route.",
@@ -175,6 +176,7 @@ const createSendToken = (
 };
 
 const loggedIn = AsyncErrorHandler(async (req, res) => {
+	console.log("LOGGED IN");
 	res.status(200).json({
 		status: "success",
 		message: "Hello You are logged in",

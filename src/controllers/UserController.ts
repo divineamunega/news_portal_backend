@@ -27,7 +27,7 @@ const getUsers = AsyncErrorHandler(async (req, res, next) => {
 		where: { role: role ? (role as any) : "USER" },
 		take,
 		skip,
-		select: { name: true, password: false, email: true, id: true },
+		select: { name: true, password: false, email: true, id: true, news: true },
 	});
 
 	if (!users) throw new AppError("No user found.", 404);

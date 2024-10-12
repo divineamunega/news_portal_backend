@@ -8,6 +8,7 @@ import {
 	getHomeNews,
 	getNews,
 	getNewsById,
+	getNewsUnAuth,
 	likeNews,
 	publishNews,
 	unlike,
@@ -30,6 +31,7 @@ router.post(
 	publishNews
 );
 
+router.get("/", getNewsUnAuth);
 router.get("/main", getHomeNews);
 router.get("/:id", getNewsById);
 router.get("/", protect({ role: "PUBLISHER" }), getNews);

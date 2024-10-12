@@ -155,6 +155,15 @@ const getHomeNews = AsyncErrorHandler(async (req, res, next) => {
 
 	res.status(200).json({ status: "success", data: news });
 });
+
+const getNewsUnAuth = AsyncErrorHandler(async function (rq, res, next) {
+	const news = await prisma.news.findMany({});
+
+	if (!news) throw new AppError("No news found.", 404);
+
+	res.json({ status: "success", news });
+});
+
 export {
 	getNews,
 	saveNewsToDraft,
@@ -164,4 +173,5 @@ export {
 	unlike,
 	addComment,
 	getHomeNews,
+	getNewsUnAuth,
 };

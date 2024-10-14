@@ -6,6 +6,7 @@ import {
 import {
 	addComment,
 	deleteNews,
+	editNews,
 	getHomeNews,
 	getNews,
 	getNewsById,
@@ -35,6 +36,13 @@ router.post(
 router.get("/", getNewsUnAuth);
 router.get("/main", getHomeNews);
 router.get("/publisher", protect({ role: "PUBLISHER" }), getNews);
+router.put(
+	"/:id",
+	protect({ role: "PUBLISHER" }),
+	upload.single("newsImage"),
+	publishNewsValidator(),
+	editNews
+);
 router.get("/:id", getNewsById);
 router.delete("/delete/:id", protect({ role: "PUBLISHER" }), deleteNews);
 router.post("/like/:id", protect({ role: "USER" }), likeNews);

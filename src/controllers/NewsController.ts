@@ -4,6 +4,8 @@ import AsyncErrorHandler from "../errors/AsyncErrorHandler";
 import prisma from "../prisma";
 import fs from "fs";
 const getNews = AsyncErrorHandler(async (req, res, next) => {
+	console.log("Hello World");
+
 	const news = await prisma.news.findMany({
 		where: { authorId: req.user?.id },
 		select: {
@@ -16,7 +18,6 @@ const getNews = AsyncErrorHandler(async (req, res, next) => {
 			comments: true,
 		},
 	});
-
 	res.status(200).json({
 		status: "success",
 		data: news.map((news) => {
@@ -188,6 +189,49 @@ const deleteNews = AsyncErrorHandler(async (req, res, next) => {
 	res.status(200).json({ status: "success", message: "Deleted Successfully" });
 });
 
+const editNews = AsyncErrorHandler(async (req, res, next) => {
+	const { id } = req.params;
+	const userId = req.user?.id || "";
+
+	const news = prisma.news.findUnique({ where: { id, authorId: userId } });
+	if (!news) throw new AppError("Could Not find a news with that id", 404);
+
+	// Upload Image
+	const upLoadResult = (await cloudinary).uploader.upload(req.file?.path || "");
+	const url = (await cloudinary).url((await upLoadResult).public_id);
+
+	fs.unlink(req.file?.path || "", (err) => {
+		if (err) throw err;
+		console.log("Uploaded image deleted from local");
+	});
+
+	const { title, description, content, section, subSection } = req.data;
+
+	const updatedNews = await prisma.news.update({
+		where: { id },
+		data: {
+			title,
+			description,
+			content,
+			newsImage: url,
+			section,
+			subSection,
+		},
+	});
+
+	res.json({
+		status: "success",
+		data: {
+			id: updatedNews.id,
+			title: updatedNews.title,
+			description: updatedNews.description,
+			content: updatedNews.content,
+			newsImage: updatedNews.newsImage,
+			isPublished: updatedNews.isPublished,
+		},
+	});
+});
+
 export {
 	getNews,
 	saveNewsToDraft,
@@ -199,4 +243,5 @@ export {
 	getHomeNews,
 	getNewsUnAuth,
 	deleteNews,
+	editNews,
 };

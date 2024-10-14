@@ -6,6 +6,15 @@ import fs from "fs";
 const getNews = AsyncErrorHandler(async (req, res, next) => {
 	const news = await prisma.news.findMany({
 		where: { authorId: req.user?.id },
+		select: {
+			likes: true,
+			id: true,
+			title: true,
+			description: true,
+			newsImage: true,
+			isPublished: true,
+			comments: true,
+		},
 	});
 
 	res.status(200).json({
@@ -17,6 +26,8 @@ const getNews = AsyncErrorHandler(async (req, res, next) => {
 				description: news.description,
 				newsImage: news.newsImage,
 				isPublished: news.isPublished,
+				likes: news.likes.length,
+				comments: news.comments.length,
 			};
 		}),
 	});
@@ -164,6 +175,19 @@ const getNewsUnAuth = AsyncErrorHandler(async function (rq, res, next) {
 	res.json({ status: "success", news });
 });
 
+const deleteNews = AsyncErrorHandler(async (req, res, next) => {
+	const { id } = req.params;
+	const userId = req.user?.id || "";
+
+	const news = prisma.news.findUnique({ where: { id, authorId: userId } });
+	if (!news) throw new AppError("Could Not find a news with that id", 404);
+	await prisma.like.deleteMany({ where: { newsId: id } });
+	await prisma.comment.deleteMany({ where: { newsId: id } });
+	await prisma.news.delete({ where: { id } });
+
+	res.status(200).json({ status: "success", message: "Deleted Successfully" });
+});
+
 export {
 	getNews,
 	saveNewsToDraft,
@@ -174,4 +198,5 @@ export {
 	addComment,
 	getHomeNews,
 	getNewsUnAuth,
+	deleteNews,
 };

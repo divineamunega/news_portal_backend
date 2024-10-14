@@ -120,13 +120,16 @@ const protect = function ({ role = "USER" }) {
 			role === "PUBLISHER" &&
 			user.role !== "PUBLISHER" &&
 			user.role !== "ADMIN"
-		)
+		) {
+			console.log("Hello world");
+
 			throw new AppError(
 				"You're not allowed to access this resource",
 				401,
 				null,
 				"forbidden"
 			);
+		}
 
 		// Assign the user to a user property on the req object
 		const capitalizedName = user.name[0].toUpperCase() + user.name.slice(1);

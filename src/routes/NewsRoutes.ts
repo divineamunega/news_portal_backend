@@ -5,6 +5,7 @@ import {
 } from "../validators/NewsValidator";
 import {
 	addComment,
+	deleteNews,
 	getHomeNews,
 	getNews,
 	getNewsById,
@@ -33,8 +34,9 @@ router.post(
 
 router.get("/", getNewsUnAuth);
 router.get("/main", getHomeNews);
+router.get("/publisher", protect({ role: "PUBLISHER" }), getNews);
 router.get("/:id", getNewsById);
-router.get("/", protect({ role: "PUBLISHER" }), getNews);
+router.delete("/delete/:id", protect({ role: "PUBLISHER" }), deleteNews);
 router.post("/like/:id", protect({ role: "USER" }), likeNews);
 router.post("/unlike/:id", protect({ role: "USER" }), unlike);
 router.post(

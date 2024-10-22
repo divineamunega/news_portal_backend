@@ -32,7 +32,7 @@ app.use("/api/v1/auth", AuthRoute);
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/news", NewsRoutes);
 
-app.get("/api/cron", (req: Request, res: Response) => {
+app.get("/api/v1/cron", (req: Request, res: Response) => {
 	console.log("CRON REQUEST");
 	res.status(200).json({
 		status: "success",

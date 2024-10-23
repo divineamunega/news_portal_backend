@@ -27,7 +27,13 @@ const getUsers = AsyncErrorHandler(async (req, res, next) => {
 		where: { role: role ? (role as any) : "USER" },
 		take,
 		skip,
-		select: { name: true, password: false, email: true, id: true, news: true },
+		select: {
+			name: true,
+			password: false,
+			email: true,
+			id: true,
+			news: true,
+		},
 	});
 
 	if (!users) throw new AppError("No user found.", 404);
@@ -45,6 +51,9 @@ const getUsers = AsyncErrorHandler(async (req, res, next) => {
 
 const deleteUser = AsyncErrorHandler(async function (req, res, next) {
 	const { userId } = req.params;
+	await prisma.comment.deleteMany({ where: { userId } });
+	await prisma.like.deleteMany({ where: { userId } });
+	await prisma.news.deleteMany({ where: { authorId: userId } });
 	await prisma.user.delete({ where: { id: userId } });
 
 	res.status(204).json({ status: "success", message: "deleted" });

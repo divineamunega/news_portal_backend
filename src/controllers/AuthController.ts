@@ -80,7 +80,7 @@ const protect = function ({ role = "USER" }) {
 		// const token = req.headers.authorization?.split(" ")[1];
 
 		// Get cookie from cookie
-		const token = req.cookies.jwt;
+		const token = req.headers["authorization"]?.split(" ")[1];
 
 		if (!token)
 			throw new AppError(
@@ -168,6 +168,7 @@ const createSendToken = (
 	res.status(statusCode).json({
 		status: "success",
 		data: {
+			token,
 			user: {
 				id: user.id,
 				name: user.name,
